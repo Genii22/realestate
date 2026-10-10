@@ -1,0 +1,231 @@
+/* Недвижимость Бишкек — палитра: голубой (основной) + графит + айвори */
+
+:root {
+    /* Основной — голубой */
+    --blue:        #4A90D9;
+    --blue-dark:   #2C6CAB;
+    --blue-light:  #A7CCEB;
+    --blue-soft:   #E3F0FA;
+
+    /* Графит — тёмный нейтральный */
+    --graphite:        #2F3E46;
+    --graphite-mid:    #52606D;
+    --graphite-light:  #9AA5B1;
+
+    /* Айвори — тёплый кремовый фон */
+    --ivory:        #FFFCEF;
+    --ivory-warm:   #F6F0DC;
+    --ivory-line:   #E8E0C8;
+}
+
+body {
+    background-color: var(--ivory);
+    color: var(--graphite);
+}
+
+/* ===== Primary → голубой ===== */
+.bg-primary {
+    background-color: var(--blue) !important;
+}
+.text-primary {
+    color: var(--blue-dark) !important;
+}
+.btn-primary {
+    background-color: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: var(--blue-dark) !important;
+    border-color: var(--blue-dark) !important;
+    color: #fff !important;
+}
+.btn-outline-primary {
+    color: var(--blue-dark);
+    border-color: var(--blue);
+}
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    background-color: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+}
+.navbar-dark.bg-primary {
+    background-color: var(--graphite) !important;
+}
+.navbar-dark.bg-primary .navbar-brand,
+.navbar-dark.bg-primary .nav-link {
+    color: var(--ivory) !important;
+}
+.navbar-dark.bg-primary .nav-link:hover {
+    color: var(--blue-light) !important;
+}
+
+/* ===== Info / Warning / Secondary → подгон под палитру ===== */
+.bg-info {
+    background-color: var(--blue-light) !important;
+    color: var(--graphite) !important;
+}
+.text-info {
+    color: var(--blue-dark) !important;
+}
+.bg-secondary {
+    background-color: var(--graphite) !important;
+    color: var(--ivory) !important;
+}
+.text-secondary {
+    color: var(--graphite) !important;
+}
+.btn-secondary {
+    background-color: var(--graphite);
+    border-color: var(--graphite);
+    color: var(--ivory);
+}
+.btn-secondary:hover {
+    background-color: var(--graphite-mid) !important;
+    border-color: var(--graphite-mid) !important;
+}
+.btn-warning {
+    background-color: var(--graphite);
+    border-color: var(--graphite);
+    color: var(--ivory);
+}
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active {
+    background-color: var(--graphite-mid) !important;
+    border-color: var(--graphite-mid) !important;
+    color: var(--ivory) !important;
+}
+.bg-warning {
+    background-color: var(--graphite) !important;
+    color: var(--ivory) !important;
+}
+
+/* ===== Hero: градиент графит → голубой ===== */
+.hero-section {
+    background: linear-gradient(135deg, var(--graphite) 0%, var(--blue-dark) 60%, var(--blue) 100%);
+    color: var(--ivory);
+    padding: 80px 0;
+}
+.hero-section .lead {
+    color: var(--ivory-warm);
+}
+
+/* ===== Карточки ===== */
+.card {
+    background-color: #fff;
+    border-color: var(--ivory-line);
+}
+.card-header.bg-primary {
+    background-color: var(--blue) !important;
+}
+.card-footer.bg-transparent {
+    border-top-color: var(--ivory-line);
+}
+
+.listing-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-color: var(--ivory-line);
+}
+.listing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(47, 62, 70, 0.18) !important;
+}
+.listing-card .card-img-top {
+    transition: opacity 0.2s ease;
+}
+.listing-card:hover .card-img-top {
+    opacity: 0.92;
+}
+
+/* ===== Навбар ===== */
+.navbar-brand {
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+/* ===== Кнопки сценариев на главной ===== */
+.scenario-btn {
+    border: 2px solid transparent;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    background-color: var(--ivory-warm);
+    color: var(--graphite);
+}
+.scenario-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    background-color: var(--ivory);
+}
+
+/* ===== Формы поиска ===== */
+.hero-section .form-control,
+.hero-section .form-select {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 0.2rem rgba(74, 144, 217, 0.25);
+}
+
+/* ===== Бейджи ===== */
+.badge {
+    font-weight: 500;
+}
+
+/* ===== Заголовки и ссылки ===== */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--graphite);
+}
+a {
+    color: var(--blue-dark);
+}
+a:hover {
+    color: var(--graphite);
+}
+
+/* ===== Светлая секция (.bg-light) — айвори ===== */
+.bg-light {
+    background-color: var(--ivory-warm) !important;
+}
+
+/* ===== Карточка детали ===== */
+.detail-specs .icon-box {
+    background: var(--blue-soft);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+/* ===== Футер — графит ===== */
+footer.bg-dark {
+    background-color: var(--graphite) !important;
+    color: var(--ivory);
+}
+footer.bg-dark small,
+footer.bg-dark .text-muted {
+    color: var(--ivory-warm) !important;
+}
+
+/* ===== Незаметная ссылка для риелторов в футере ===== */
+.footer-staff-link {
+    color: var(--ivory-warm) !important;
+    text-decoration: none;
+    border-bottom: 1px dotted var(--graphite-light);
+    opacity: 0.55;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+.footer-staff-link:hover {
+    opacity: 1;
+    color: var(--blue-light) !important;
+    border-bottom-color: var(--blue-light);
+}
+
+/* ===== Адаптивность ===== */
+@media (max-width: 768px) {
+    .listing-card { margin-bottom: 1rem; }
+    .hero-section { padding: 40px 0; }
+}

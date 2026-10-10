@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title th:text="${title != null ? title + ' — Недвижимость Бишкек' : 'Недвижимость Бишкек'}">Недвижимость Бишкек</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet"/>
+  <link th:href="@{/css/style.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- Навигационная панель -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" th:fragment="navFragment" id="navFragment">
+  <div class="container">
+    <a class="navbar-brand fw-bold" th:href="@{/}">
+      <i class="bi bi-house-fill me-2"></i>Недвижимость Бишкек
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/listings(dealType='RENT')}">
+            <i class="bi bi-key me-1"></i>Аренда
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/listings(dealType='SALE')}">
+            <i class="bi bi-tag me-1"></i>Покупка
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/realtors}">
+            <i class="bi bi-people me-1"></i>Наши риелторы
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav" sec:authorize="isAuthenticated()">
+        <li class="nav-item" sec:authorize="hasAnyRole('SELLER','AGENT')">
+          <a class="nav-link" th:href="@{/listings/new}">
+            <i class="bi bi-plus-circle me-1"></i>Разместить
+          </a>
+        </li>
+        <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+          <a class="nav-link" th:href="@{/admin/users}">
+            <i class="bi bi-shield-lock me-1"></i>Админ-панель
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/profile}">
+            <i class="bi bi-person-circle me-1"></i>Кабинет
+          </a>
+        </li>
+        <li class="nav-item">
+          <form th:action="@{/auth/logout}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-outline-light btn-sm ms-2">Выйти</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Основной контент -->
+<main class="container my-4" th:fragment="content">
+  <!-- Контент страниц будет здесь -->
+</main>
+
+<!-- Footer (общий для всех страниц) -->
+<footer class="bg-dark text-white py-4 mt-5"
+        th:fragment="footerFragment" id="footerFragment">
+  <div class="container text-center">
+    <p class="mb-0">© 2026 Недвижимость Бишкек — агентство недвижимости в г. Бишкек, КР</p>
+    <div class="mt-3">
+      <a sec:authorize="isAnonymous()" th:href="@{/auth/login}"
+         class="footer-staff-link small">
+        Вход для сотрудников
+      </a>
+      <a sec:authorize="isAuthenticated()" th:href="@{/profile}"
+         class="footer-staff-link small">
+        Кабинет риелтора
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

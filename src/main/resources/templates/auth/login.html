@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Вход для риелторов — Недвижимость Бишкек</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet"/>
+</head>
+<body class="bg-light">
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow" style="width:420px;">
+    <div class="card-header bg-primary text-white text-center py-3">
+      <h4 class="mb-0"><i class="bi bi-house-fill me-2"></i>Недвижимость Бишкек</h4>
+    </div>
+    <div class="card-body p-4">
+      <h5 class="text-center mb-4">Вход для риелторов</h5>
+      <p class="text-muted small text-center mb-3">
+        Клиентам регистрация не нужна — просто оставьте заявку на странице объявления.
+      </p>
+
+      <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+      <form th:action="@{/auth/login}" method="post">
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" name="username" class="form-control"
+                 placeholder="ivan@nedvizhimost.kg" required autofocus
+                 autocomplete="username"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Пароль</label>
+          <input type="password" name="password" class="form-control" required
+                 autocomplete="new-password"/>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mb-3">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Войти
+        </button>
+      </form>
+      <hr/>
+      <p class="text-center small text-muted mb-0">
+        <a th:href="@{/}">← На главную</a>
+      </p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

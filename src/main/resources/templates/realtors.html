@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Наши риелторы — Недвижимость Бишкек</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet"/>
+  <link th:href="@{/css/style.css}" rel="stylesheet"/>
+</head>
+<body>
+<div th:replace="~{layout :: #navFragment}"></div>
+
+<div class="container my-5">
+  <div class="text-center mb-5">
+    <h1 class="mb-2"><i class="bi bi-people-fill text-primary me-2"></i>Наши риелторы</h1>
+    <p class="text-muted">
+      Если вы хотите <strong>сдать</strong> или <strong>продать</strong> своё жильё —
+      свяжитесь с риелтором нужной специализации. Он выедет на объект, сделает фотографии,
+      составит описание и разместит объявление за вас.
+    </p>
+  </div>
+
+  <!-- Специалисты по аренде -->
+  <section class="mb-5">
+    <div class="d-flex align-items-center mb-3">
+      <i class="bi bi-key-fill fs-3 text-info me-2"></i>
+      <h3 class="mb-0">Специалисты по аренде</h3>
+      <span class="badge bg-info ms-3" th:text="${rentRealtors.size()}">0</span>
+    </div>
+    <div class="row g-4">
+      <div th:each="r : ${rentRealtors}" class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body text-center">
+            <i class="bi bi-person-circle display-3 text-info"></i>
+            <h5 class="mt-2 mb-1" th:text="${r.fullName}">Имя Фамилия</h5>
+            <span class="badge bg-info">Аренда</span>
+            <div class="text-start mt-3">
+              <p class="mb-2">
+                <i class="bi bi-telephone-fill text-success me-2"></i>
+                <a th:href="'tel:' + ${r.phone}" th:text="${r.phone}"
+                   class="text-decoration-none fw-bold">+996 000 000 000</a>
+              </p>
+              <p class="mb-0">
+                <i class="bi bi-envelope-fill text-primary me-2"></i>
+                <a th:href="'mailto:' + ${r.email}" th:text="${r.email}"
+                   class="text-decoration-none">email@nedvizhimost.kg</a>
+              </p>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent text-center">
+            <a th:href="'tel:' + ${r.phone}" class="btn btn-primary btn-sm">
+              <i class="bi bi-telephone me-1"></i>Позвонить
+            </a>
+            <a th:href="'mailto:' + ${r.email}" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-envelope me-1"></i>Написать
+            </a>
+          </div>
+        </div>
+      </div>
+      <div th:if="${rentRealtors.empty}" class="col-12 text-muted">
+        <em>Пока нет специалистов по аренде.</em>
+      </div>
+    </div>
+  </section>
+
+  <!-- Специалисты по продаже -->
+  <section>
+    <div class="d-flex align-items-center mb-3">
+      <i class="bi bi-cash-coin fs-3 text-secondary me-2"></i>
+      <h3 class="mb-0">Специалисты по продаже</h3>
+      <span class="badge bg-secondary ms-3" th:text="${saleRealtors.size()}">0</span>
+    </div>
+    <div class="row g-4">
+      <div th:each="r : ${saleRealtors}" class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body text-center">
+            <i class="bi bi-person-circle display-3 text-secondary"></i>
+            <h5 class="mt-2 mb-1" th:text="${r.fullName}">Имя Фамилия</h5>
+            <span class="badge bg-secondary">Продажа</span>
+            <div class="text-start mt-3">
+              <p class="mb-2">
+                <i class="bi bi-telephone-fill text-success me-2"></i>
+                <a th:href="'tel:' + ${r.phone}" th:text="${r.phone}"
+                   class="text-decoration-none fw-bold">+996 000 000 000</a>
+              </p>
+              <p class="mb-0">
+                <i class="bi bi-envelope-fill text-primary me-2"></i>
+                <a th:href="'mailto:' + ${r.email}" th:text="${r.email}"
+                   class="text-decoration-none">email@nedvizhimost.kg</a>
+              </p>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent text-center">
+            <a th:href="'tel:' + ${r.phone}" class="btn btn-primary btn-sm">
+              <i class="bi bi-telephone me-1"></i>Позвонить
+            </a>
+            <a th:href="'mailto:' + ${r.email}" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-envelope me-1"></i>Написать
+            </a>
+          </div>
+        </div>
+      </div>
+      <div th:if="${saleRealtors.empty}" class="col-12 text-muted">
+        <em>Пока нет специалистов по продаже.</em>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div th:replace="~{layout :: #footerFragment}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

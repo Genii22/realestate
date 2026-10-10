@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Админ-панель — Недвижимость Бишкек</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet"/>
+  <link th:href="@{/css/style.css}" rel="stylesheet"/>
+</head>
+<body>
+<div th:replace="~{layout :: #navFragment}"></div>
+
+<div class="container my-4">
+  <h1 class="mb-4">
+    <i class="bi bi-shield-lock-fill text-primary me-2"></i>Админ-панель
+  </h1>
+
+  <div th:if="${param.created}" class="alert alert-success">
+    <i class="bi bi-check-circle me-2"></i>Учётная запись риелтора создана.
+  </div>
+  <div th:if="${param.deleted != null}" class="alert alert-success">
+    <i class="bi bi-check-circle me-2"></i>Риелтор удалён.
+  </div>
+  <div th:if="${param.error}" class="alert alert-danger"
+       th:text="${param.error}"></div>
+  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+  <div class="row g-4">
+
+    <!-- Список пользователей -->
+    <div class="col-lg-7">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <i class="bi bi-people me-2"></i>Пользователи системы
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Имя</th>
+                <th>Email</th>
+                <th>Телефон</th>
+                <th>Роль</th>
+                <th>Специализация</th>
+                <th style="width:60px;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="u : ${users}">
+                <td th:text="${u.fullName}">Имя Фамилия</td>
+                <td><small th:text="${u.email}">email</small></td>
+                <td><small th:text="${u.phone}">+996</small></td>
+                <td>
+                  <span class="badge"
+                        th:classappend="${u.role.name() == 'ADMIN'} ? 'bg-secondary' : 'bg-primary'"
+                        th:text="${u.role}">ROLE</span>
+                </td>
+                <td>
+                  <span th:if="${u.specialization != null}" class="badge"
+                        th:classappend="${u.specialization.name() == 'RENT'} ? 'bg-info' : 'bg-secondary'"
+                        th:text="${u.specialization.name() == 'RENT'} ? 'Аренда' : 'Продажа'">—</span>
+                  <span th:if="${u.specialization == null}" class="text-muted">—</span>
+                </td>
+                <td class="text-end">
+                  <!-- Кнопка удаления только для не-админов и не-себя -->
+                  <form th:if="${u.role.name() != 'ADMIN' and u.email != currentEmail}"
+                        th:action="@{/admin/users/{id}/delete(id=${u.id})}" method="post"
+                        th:attr="data-name=${u.fullName}"
+                        onsubmit="return confirm('Удалить риелтора ' + this.dataset.name + '? Если у него есть объявления — удаление будет отклонено.');"
+                        class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Удалить">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Форма создания риелтора -->
+    <div class="col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <i class="bi bi-person-plus me-2"></i>Новый риелтор
+        </div>
+        <div class="card-body">
+          <p class="text-muted small mb-3">
+            Заполните данные и выдайте логин/пароль сотруднику лично.
+          </p>
+          <form th:action="@{/admin/users}" method="post" autocomplete="off">
+            <div class="row g-2">
+              <div class="col-6">
+                <label class="form-label small mb-1">Имя</label>
+                <input type="text" name="firstName" class="form-control form-control-sm"
+                       required autocomplete="off"/>
+              </div>
+              <div class="col-6">
+                <label class="form-label small mb-1">Фамилия</label>
+                <input type="text" name="lastName" class="form-control form-control-sm"
+                       required autocomplete="off"/>
+              </div>
+              <div class="col-12">
+                <label class="form-label small mb-1">Email (логин)</label>
+                <input type="email" name="email" class="form-control form-control-sm"
+                       placeholder="ivan@nedvizhimost.kg" required autocomplete="off"/>
+              </div>
+              <div class="col-12">
+                <label class="form-label small mb-1">Пароль</label>
+                <input type="text" name="password" class="form-control form-control-sm"
+                       minlength="6" required placeholder="не короче 6 символов"
+                       autocomplete="new-password"/>
+                <small class="text-muted">Передайте пароль сотруднику лично.</small>
+              </div>
+              <div class="col-12">
+                <label class="form-label small mb-1">Телефон</label>
+                <input type="tel" name="phone" class="form-control form-control-sm"
+                       placeholder="+996 700 000 000" required autocomplete="off"/>
+              </div>
+              <div class="col-6">
+                <label class="form-label small mb-1">Роль</label>
+                <select name="role" class="form-select form-select-sm" required>
+                  <option th:each="r : ${roles}" th:value="${r}"
+                          th:text="${r.name() == 'SELLER'} ? 'Риелтор' : 'Агент'">SELLER</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label small mb-1">Специализация</label>
+                <select name="specialization" class="form-select form-select-sm" required>
+                  <option value="RENT">Аренда</option>
+                  <option value="SALE">Продажа</option>
+                </select>
+              </div>
+              <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary w-100">
+                  <i class="bi bi-person-plus me-2"></i>Создать аккаунт
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div th:replace="~{layout :: #footerFragment}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

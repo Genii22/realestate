@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Разместить объявление — Недвижимость Бишкек</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet"/>
+  <link th:href="@{/css/style.css}" rel="stylesheet"/>
+</head>
+<body>
+<div th:replace="~{layout :: #navFragment}"></div>
+
+<div class="container my-4">
+  <h1 class="mb-4">
+    <i class="bi bi-plus-circle text-primary me-2"></i>Новое объявление
+  </h1>
+
+  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+  <form th:action="@{/listings}" method="post" enctype="multipart/form-data" class="row g-4">
+
+    <!-- Объект -->
+    <div class="col-lg-7">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <i class="bi bi-house me-2"></i>Объект недвижимости
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Тип недвижимости</label>
+              <select name="propertyTypeId" id="propertyTypeSelect" class="form-select" required>
+                <option value="">— выберите —</option>
+                <option th:each="t : ${propertyTypes}"
+                        th:value="${t.id}" th:text="${t.name}"
+                        th:attr="data-key=${t.name}">Квартира</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Микрорайон / жилмассив</label>
+              <select name="districtId" class="form-select" required>
+                <option value="">— выберите —</option>
+                <option th:each="d : ${districts}"
+                        th:value="${d.id}"
+                        th:text="${d.name}">мкр. Джал</option>
+              </select>
+              <small class="text-muted">Только г. Бишкек.</small>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Улица</label>
+              <input type="text" name="street" class="form-control" required
+                     placeholder="Чуй"/>
+            </div>
+            <div class="col-md-3" data-field="buildingNumber">
+              <label class="form-label">Дом</label>
+              <input type="text" name="buildingNumber" class="form-control" placeholder="12А"/>
+            </div>
+            <div class="col-md-3" data-field="apartmentNumber">
+              <label class="form-label">Квартира</label>
+              <input type="text" name="apartmentNumber" class="form-control" placeholder="45"/>
+            </div>
+
+            <div class="col-md-3" data-field="area">
+              <label class="form-label">Площадь, м²</label>
+              <input type="number" step="0.1" min="1" name="area" class="form-control" required/>
+            </div>
+            <div class="col-md-3" data-field="rooms">
+              <label class="form-label">Комнат</label>
+              <input type="number" min="0" name="rooms" class="form-control"/>
+            </div>
+            <div class="col-md-3" data-field="floor">
+              <label class="form-label">Этаж</label>
+              <input type="number" min="0" name="floor" class="form-control"/>
+            </div>
+            <div class="col-md-3" data-field="totalFloors">
+              <label class="form-label" id="totalFloorsLabel">Этажей всего</label>
+              <input type="number" min="1" name="totalFloors" class="form-control"/>
+            </div>
+
+            <div class="col-md-4" data-field="yearBuilt">
+              <label class="form-label">Год постройки</label>
+              <input type="number" min="1800" max="2100" name="yearBuilt" class="form-control" placeholder="2015"/>
+            </div>
+
+            <!-- Площадь участка — только для дома -->
+            <div class="col-12" data-field="plotArea">
+              <label class="form-label">Площадь участка</label>
+              <div class="row g-2">
+                <div class="col-6">
+                  <div class="input-group">
+                    <input type="number" step="0.01" min="0" name="plotArea" id="plotAreaM2"
+                           class="form-control" placeholder="800"/>
+                    <span class="input-group-text">м²</span>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="input-group">
+                    <input type="number" step="0.01" min="0" id="plotAreaSotki"
+                           class="form-control" placeholder="8"/>
+                    <span class="input-group-text">соток</span>
+                  </div>
+                </div>
+              </div>
+              <small class="text-muted">Введите в любых единицах — второе поле пересчитается автоматически (1 сотка = 100 м²).</small>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Описание объекта</label>
+              <textarea name="propertyDescription" class="form-control" rows="4"
+                        placeholder="Евроремонт, мебель, рядом школа..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Объявление -->
+    <div class="col-lg-5">
+      <div class="card shadow-sm mb-3">
+        <div class="card-header bg-primary text-white">
+          <i class="bi bi-megaphone me-2"></i>Объявление
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Заголовок</label>
+            <input type="text" name="title" class="form-control" required
+                   placeholder="Продаётся 3-комнатная в центре"/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Тип сделки</label>
+            <select name="dealType" class="form-select" required>
+              <option value="">— выберите —</option>
+              <option value="SALE">Продажа</option>
+              <option value="RENT">Аренда</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Цена, сом</label>
+            <input type="number" step="0.01" min="1" name="price" class="form-control" required
+                   placeholder="3500000"/>
+            <small class="text-muted">Для аренды — за месяц.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-3">
+        <div class="card-header bg-primary text-white">
+          <i class="bi bi-images me-2"></i>Фотографии
+        </div>
+        <div class="card-body">
+          <!-- Скрытый multi-input хранит итоговый набор файлов и уходит на сервер -->
+          <input type="file" name="photos" id="photos" class="d-none" multiple
+                 accept="image/jpeg,image/png,image/webp,image/gif"/>
+
+          <button type="button" id="addPhotoBtn" class="btn btn-outline-primary w-100">
+            <i class="bi bi-plus-circle me-2"></i>Добавить фото
+          </button>
+          <small class="text-muted d-block mt-2">
+            Добавляйте по одному. Первое станет главным. До 10 МБ на файл (jpg/png/webp/gif).
+          </small>
+          <div id="photoPreview" class="row g-2 mt-3"></div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg w-100">
+        <i class="bi bi-check-lg me-2"></i>Опубликовать
+      </button>
+      <a th:href="@{/profile}" class="btn btn-link w-100 mt-2">Отмена</a>
+    </div>
+
+  </form>
+</div>
+
+<div th:replace="~{layout :: #footerFragment}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ===== Поля формы зависят от типа недвижимости =====
+  // Для каждого типа — множество ВИДИМЫХ опциональных полей.
+  // area виден всегда и здесь не указан.
+  const FIELDS_BY_TYPE = {
+    'Квартира': new Set(['buildingNumber', 'apartmentNumber', 'rooms', 'floor', 'totalFloors', 'yearBuilt']),
+    'Дом':      new Set(['buildingNumber', 'rooms', 'totalFloors', 'yearBuilt', 'plotArea']),
+    'Комната':  new Set(['buildingNumber', 'apartmentNumber', 'floor', 'totalFloors', 'yearBuilt']),
+    'Офис':     new Set(['buildingNumber', 'floor', 'totalFloors', 'yearBuilt']),
+    'Участок':  new Set([])   // только улица + площадь + описание
+  };
+
+  // Поля, которые можно скрывать (area скрывать нельзя).
+  const TOGGLEABLE = ['buildingNumber', 'apartmentNumber', 'rooms', 'floor', 'totalFloors', 'yearBuilt', 'plotArea'];
+
+  function applyTypeRules() {
+    const select = document.getElementById('propertyTypeSelect');
+    const opt = select.options[select.selectedIndex];
+    const key = opt ? opt.dataset.key : null;
+    const visible = FIELDS_BY_TYPE[key]; // undefined → ничего не выбрано → показываем всё
+
+    TOGGLEABLE.forEach(field => {
+      const div = document.querySelector(`[data-field="${field}"]`);
+      if (!div) return;
+      const show = !visible || visible.has(field);
+      div.style.display = show ? '' : 'none';
+      if (!show) {
+        div.querySelectorAll('input, select, textarea').forEach(i => i.value = '');
+      }
+    });
+
+    // Подменяем подписи для типов, где смысл поля отличается.
+    const tfLabel = document.getElementById('totalFloorsLabel');
+    if (tfLabel) {
+      tfLabel.textContent = (key === 'Дом') ? 'Этажей в доме' : 'Этажей всего';
+    }
+    // Площадь всегда в м² (для соток умножайте на 100), чтобы не было путаницы в БД.
+  }
+
+  document.getElementById('propertyTypeSelect').addEventListener('change', applyTypeRules);
+  applyTypeRules();   // начальная отрисовка
+
+  // ===== Связка м² ↔ соток для площади участка =====
+  const m2  = document.getElementById('plotAreaM2');
+  const sot = document.getElementById('plotAreaSotki');
+  if (m2 && sot) {
+    let syncing = false;
+    m2.addEventListener('input', () => {
+      if (syncing) return; syncing = true;
+      sot.value = m2.value === '' ? '' : (parseFloat(m2.value) / 100).toFixed(2);
+      syncing = false;
+    });
+    sot.addEventListener('input', () => {
+      if (syncing) return; syncing = true;
+      m2.value = sot.value === '' ? '' : (parseFloat(sot.value) * 100).toFixed(2);
+      syncing = false;
+    });
+  }
+
+  // ===== Загрузка фото по одному =====
+  // Накапливаем выбранные файлы в DataTransfer, синхронизируем скрытый input.
+  const photosInput = document.getElementById('photos');
+  const addBtn      = document.getElementById('addPhotoBtn');
+  const preview     = document.getElementById('photoPreview');
+  const filesDT     = new DataTransfer();
+
+  // Временный одинокий picker — открывается каждым кликом по «+ Добавить фото».
+  const pickerOne = document.createElement('input');
+  pickerOne.type = 'file';
+  pickerOne.accept = 'image/jpeg,image/png,image/webp,image/gif';
+
+  addBtn.addEventListener('click', () => pickerOne.click());
+
+  pickerOne.addEventListener('change', () => {
+    const picked = pickerOne.files[0];
+    if (picked) {
+      filesDT.items.add(picked);
+      photosInput.files = filesDT.files;
+      renderPreview();
+    }
+    pickerOne.value = ''; // позволяем выбрать тот же файл повторно при необходимости
+  });
+
+  function removeAt(idx) {
+    const tmp = new DataTransfer();
+    Array.from(filesDT.files).forEach((f, i) => { if (i !== idx) tmp.items.add(f); });
+    // очищаем filesDT и копируем заново
+    while (filesDT.items.length) filesDT.items.remove(0);
+    Array.from(tmp.files).forEach(f => filesDT.items.add(f));
+    photosInput.files = filesDT.files;
+    renderPreview();
+  }
+
+  function renderPreview() {
+    preview.innerHTML = '';
+    Array.from(filesDT.files).forEach((file, idx) => {
+      const url = URL.createObjectURL(file);
+      const col = document.createElement('div');
+      col.className = 'col-4 col-md-3';
+      col.innerHTML = `
+        <div class="position-relative">
+          <img src="${url}" class="img-fluid rounded shadow-sm"
+               style="height:90px; width:100%; object-fit:cover;"
+               onload="URL.revokeObjectURL(this.src)"/>
+          ${idx === 0 ? '<span class="badge bg-primary position-absolute top-0 start-0 m-1">Главное</span>' : ''}
+          <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 py-0 px-1"
+                  data-remove="${idx}" title="Удалить">×</button>
+        </div>`;
+      preview.appendChild(col);
+    });
+  }
+
+  // Делегирование клика по «×» на превью.
+  preview.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-remove]');
+    if (btn) removeAt(parseInt(btn.dataset.remove, 10));
+  });
+</script>
+</body>
+</html>
